@@ -14,7 +14,9 @@ unit DmlColor;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 

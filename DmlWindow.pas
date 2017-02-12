@@ -14,12 +14,14 @@ unit DmlWindow;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
 uses
-    Classes,SysUtils,SDL2,DmlTextureManager,DmlColor;
+    Classes,SysUtils,SDL2,DmlColor;
 
 type
     TDmlWindow = class

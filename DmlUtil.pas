@@ -14,7 +14,9 @@ unit DmlUtil;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
@@ -30,7 +32,6 @@ type
         id : integer;
         sdlTexture : PSDL_Texture;
         constructor Create(var t:PSDL_Texture;w,h,i:integer;n:string);
-        destructor Free;
     end;
 
     TDmlPoint = class(TObject)
@@ -53,11 +54,27 @@ type
         constructor Create(a,b,c,d:double);
     end;
 
-
+    TDmlPair<K,V> = class
+        key : K;
+        value : V;
+        constructor Create(key:K;value:V);
+        class function Equals(a,b:TDmlPair<K,V>):boolean; reintroduce;
+    end;
 function Convert(clip:TDmlClipRect):TSDL_Rect; overload;
 function Convert(point:TDmlPoint):TSDL_Point; overload;
 
 implementation
+
+constructor TDmlPair<K,V>.Create(key:K;value:V);
+begin
+    self.key:=key;
+    self.value:=value;
+end;
+
+class function TDmlPair<K,V>.Equals(a,b:TDmlPair<K,V>):boolean;
+begin
+    result:=a.key=b.key;
+end;
 
 constructor TDmlTextureInfo.Create(var t:PSDL_Texture;w,h,i:integer;n:string);
 begin
@@ -67,11 +84,6 @@ begin
     id:=i;
     name:=n;
     refCount:=0;
-end;
-
-destructor TDmlTextureInfo.Free;
-begin
-    SDL_DestroyTexture(sdlTexture);
 end;
 
 constructor TDmlClipRect.Create(a,b,c,d:double);

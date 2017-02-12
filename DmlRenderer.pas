@@ -14,7 +14,9 @@ unit DmlRenderer;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
@@ -32,7 +34,7 @@ type
         sdlWindow : PSDL_Window;
         dmlWindow : TDmlWindow;
         dmlRenderMode : TDmlRenderMode;
-        function CreateRenderer():boolean;
+        procedure CreateRenderer();
     public
         //constructor Create(wnd:PSDL_Window;mode:TDmlRenderMode);
         constructor Create(wnd:TDmlWindow;mode:TDmlRenderMode);
@@ -43,6 +45,7 @@ type
         procedure Show;
         procedure Draw(drawable:TDmlDrawable); overload;
         procedure Draw(texture:TDmlTexture); overload;
+        procedure SetScale(w,h:integer);
         function CreateTexture(w,h:integer):TDmlTexture;
         function Renderer:PSDL_Renderer;
         class function GetSdlRenderer:PSDL_Renderer;
@@ -59,7 +62,7 @@ begin
 end;
 
 //constructor TDmlRenderer.Create(wnd:PSDL_Window;mode:TDmlRenderMode);
-function TDmlRenderer.CreateRenderer():boolean;
+procedure TDmlRenderer.CreateRenderer();
 var
     sdlRenderFlags : cardinal;
     m : TDmlRenderModes;
@@ -111,6 +114,11 @@ end;
 procedure TDmlRenderer.Draw(texture:TDmlTexture);
 begin
     SDL_RenderCopy(sdlRenderer,texture.Texture,nil,nil);
+end;
+
+procedure TDmlRenderer.SetScale(w,h:integer);
+begin
+    SDL_RenderSetLogicalSize(sdlRenderer,w,h);
 end;
 
 function TDmlRenderer.CreateTexture(w,h:integer):TDmlTexture;

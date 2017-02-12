@@ -14,12 +14,14 @@ unit DmlGraphicsWindow;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
 uses
-    Classes,SysUtils,DmlWindow,DmlRenderer,DmlColor,DmlTexture,
+    Classes,SysUtils,DmlWindow,DmlRenderer,DmlColor,DmlDrawable,DmlTexture,
     DmlTextureManager,SDL2;
 
 type
@@ -28,10 +30,13 @@ type
         dmlRenderer : TDmlRenderer;
         dmlTextureManager : TDmlTextureManager;
         renderWidth,renderHeight : integer;
-        renderCanvas : TDmlTexture;
     public
         constructor Create(title:pchar;w,h,rw,rh:integer;fullscreen:boolean);
         destructor Free;
+        function Renderer:TDmlRenderer;
+        procedure Draw(drawable:TDmlDrawable);
+        procedure Clear;
+        procedure Show;
     end;
 implementation
 
@@ -41,22 +46,37 @@ begin
     renderWidth:=rw;
     renderHeight:=rh;
     dmlRenderer:=TDmlRenderer.Create(self,[rmRENDER_HARDWARE, rmRENDER_TOTEXTURE]);
-    writeln(SDL_GetError);
+    dmlRenderer.SetScale(renderWidth,renderHeight);
+    writeln(renderWidth,'x',renderHeight);
     dmlTextureManager:=TDmlTextureManager.Create(dmlRenderer.Renderer);
-    renderCanvas:=TDmlTexture.Create(renderWidth,renderHeight);
-    dmlRenderer.SetRenderTarget(renderCanvas);
     dmlRenderer.SetDrawColor(TDmlColor.dmlBLUE);
+    dmlRenderer.Show;
+end;
+
+function TDmlGraphicsWindow.Renderer:TDmlRenderer;
+begin
+    result:=dmlRenderer;
+end;
+
+procedure TDmlGraphicsWindow.Draw(drawable:TDmlDrawable);
+begin
+    dmlRenderer.Draw(drawable);
+end;
+
+procedure TDmlGraphicsWindow.Clear;
+begin
     dmlRenderer.Clear;
-    dmlRenderer.SetRenderTarget(nil);
-    dmlRenderer.Draw(renderCanvas);
+end;
+
+procedure TDmlGraphicsWindow.Show;
+begin
     dmlRenderer.Show;
 end;
 
 destructor TDmlGraphicsWindow.Free;
 begin
-    inherited;
     dmlRenderer.Free;
     dmlTextureManager.Free;
-    renderCanvas.Free;
+    inherited;
 end;
 end.

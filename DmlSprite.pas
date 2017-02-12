@@ -14,7 +14,9 @@ unit DmlSprite;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
@@ -23,6 +25,14 @@ uses
 
 type
     TDmlSprite = class(TDmlRectangleShape)
+        constructor Create(x,y:double;texture:TDmlTexture);
     end;
 implementation
+
+constructor TDmlSprite.Create(x,y:double;texture:TDmlTexture);
+begin
+    inherited Create(x,y,texture.w,texture.h);
+    SetTexture(texture);
+end;
+
 end.

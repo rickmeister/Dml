@@ -14,7 +14,9 @@ unit DmlRectangleShape;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
@@ -23,15 +25,22 @@ uses
 
 type
     TDmlRectangleShape = class(TDmlShape)
+    protected
+        procedure UpdateRect(x,y:double);
+    public
         constructor Create(x,y,w,h:double);
         destructor Free;
         procedure Render(sdlRenderer:PSDL_Renderer); override;
+        procedure Move(x,y:double);
     end;
 
 implementation
 
 constructor TDmlRectangleShape.Create(x,y,w,h:double);
 begin
+    inherited Create;
+    position.x:=x;
+    position.y:=y;
     SetLength(vertices, 4);
     vertices[0]:=TDmlVertex.Create; vertices[0].x:=x; vertices[0].y:=y;
     vertices[1]:=TDmlVertex.Create; vertices[1].x:=x; vertices[1].y:=y+h;
@@ -44,6 +53,27 @@ begin
     dmlClipRect:=TDmlClipRect.Create(x,y,w,h);
 end;
 
+procedure TDmlRectangleShape.UpdateRect(x,y:double);
+var
+    i : integer;
+begin
+    for i:=Low(vertices) to High(vertices) do begin
+        vertices[i].x:=vertices[i].x+x;
+        vertices[i].y:=vertices[i].y+y;
+    end;
+    dmlClipRect.x:=dmlClipRect.x+x;
+    dmlClipRect.y:=dmlClipRect.y+y;
+    sdlClipRect.x:=round(position.x + x);
+    sdlClipRect.y:=round(position.y + y);
+end;
+
+procedure TDmlRectangleShape.Move(x,y:double);
+begin
+    position.x:=position.x+x;
+    position.y:=position.y+Y;
+    UpdateRect(position.x,position.y);
+end;
+
 destructor TDmlRectangleShape.Free;
 var
     i : integer;
@@ -51,6 +81,7 @@ begin
     dmlClipRect.Free;
     for i:=Low(vertices) to High(vertices) do vertices[i].Free;
     dmlColor.Free;
+    inherited;
 end;
 
 procedure TDmlRectangleShape.Render(sdlRenderer:PSDL_Renderer);

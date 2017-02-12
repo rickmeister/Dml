@@ -14,13 +14,20 @@ unit DmlTextureManager;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
 uses
     Classes,SysUtils,DmlUtil,SDL2,SDL2_image;
 type
+    TDmlResourceLoader<T,R> = class
+    protected
+        loadedResource : array of T;
+    end;
+
     TDmlTextureManager = class(TObject)
     private
         class var loadedTextures : array of TDmlTextureInfo;
@@ -62,10 +69,12 @@ var
     i : integer;
 begin
     for i:=Low(loadedTextures) to High(loadedTextures) do begin
-        writeln('Freeing texture ',loadedTextures[i].name);
+        if assigned(loadedTextures[i]) then SDL_DestroyTexture(loadedTextures[i].sdlTexture);
         loadedTextures[i].Free;
     end;
     instance:=nil;
+    sdlRenderer:=nil;
+    SetLength(loadedTextures,0);
 end;
 
 function TDmlTextureManager.Find(filename:string):integer;
@@ -106,6 +115,7 @@ begin
         loadedTextures[High(loadedTextures)]:=TDmlTextureInfo.Create(texture,image^.w, image^.h,nextId,filename);
         writeln('Texture loaded: ', filename);
         Inc(nextId);
+        SDL_FreeSurface(image);
         result:=loadedTextures[High(loadedTextures)];
     end;
 end;

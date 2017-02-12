@@ -14,21 +14,22 @@ unit DmlTexture;
 {                                                                     }
 {  0. You just DO WHAT THE FUCK YOU WANT TO.                          }
 {*********************************************************************}
-{$MODE DELPHI}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 
 uses
-    Classes,SysUtils,SDL2,DmlTextureManager,DmlUtil;
+    Classes,SysUtils,SDL2,DmlTextureManager,DmlUtil, DmlResource;
 
 type
-    TDmlTexture = class(TObject)
+    TDmlTexture = class(TDmlResource<PSDL_Texture>)
         sdlTexture : PSDL_Texture;
         w,h : integer;
         id : integer;
         constructor Create(filename:string); overload;
         constructor Create(width,height:integer); overload;
-        constructor Create(t:PSDL_Texture;width,height:integer); overload;
         function Texture:PSDL_Texture;
     end;
 implementation
@@ -53,13 +54,6 @@ begin
     w:=ti.width;
     h:=ti.height;
     id:=ti.id;
-end;
-
-constructor TDmlTexture.Create(t:PSDL_Texture;width,height:integer);
-begin
-    sdlTexture:=t;
-    w:=width;
-    h:=height;
 end;
 
 function TDmlTexture.Texture:PSDL_Texture;
