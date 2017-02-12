@@ -17,7 +17,7 @@ unit DmlColor;
 {$IFDEF FPC}
   {$MODE DELPHI}
 {$ENDIF}
-
+ {$M+}
 interface
 
 uses
@@ -28,7 +28,7 @@ type
     private
         red,green,blue,alpha : byte;
     public
-        const class var dmlRED,dmlBLUE,dmlGREEN,dmlGREY,dmlWHITE,dmlBLACK : TDmlColor;
+        class var dmlRED,dmlBLUE,dmlGREEN,dmlGREY,dmlWHITE,dmlBLACK : TDmlColor;
         constructor Create(r,g,b,a:byte); overload;
         constructor Create(rgba:cardinal); overload;
     published

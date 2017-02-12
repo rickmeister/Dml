@@ -80,14 +80,10 @@ end;
 function TDmlTextureManager.Find(filename:string):integer;
 var
     t : TDmlTextureInfo;
-    i : integer;
 begin
-    i:=0;
     for t in loadedTextures do begin
         if assigned (t) and (t.name=filename) then begin
             writeln('Texture found ', t.name);
-            writeln('loopcount: ',i);
-            Inc(i);
             exit(t.id);
         end;
     end;
@@ -105,7 +101,7 @@ begin
         result:=loadedTextures[index];
         end
     else begin
-        image:=IMG_Load(pchar(filename));
+        image:=IMG_Load(PAnsiChar(@filename));
         if not assigned(image) then begin
             writeln(IMG_GetError);
             exit(loadedTextures[0]);

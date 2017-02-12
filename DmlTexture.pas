@@ -21,10 +21,10 @@ unit DmlTexture;
 interface
 
 uses
-    Classes,SysUtils,SDL2,DmlTextureManager,DmlUtil, DmlResource;
+    Classes,SysUtils,SDL2,DmlTextureManager,DmlUtil;
 
 type
-    TDmlTexture = class(TDmlResource<PSDL_Texture>)
+    TDmlTexture = class
         sdlTexture : PSDL_Texture;
         w,h : integer;
         id : integer;

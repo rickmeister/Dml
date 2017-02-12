@@ -31,7 +31,7 @@ type
         dmlTextureManager : TDmlTextureManager;
         renderWidth,renderHeight : integer;
     public
-        constructor Create(title:pchar;w,h,rw,rh:integer;fullscreen:boolean);
+        constructor Create(title:AnsiString;w,h,rw,rh:integer;fullscreen:boolean);
         destructor Free;
         function Renderer:TDmlRenderer;
         procedure Draw(drawable:TDmlDrawable);
@@ -40,7 +40,7 @@ type
     end;
 implementation
 
-constructor TDmlGraphicsWindow.Create(title:pchar;w,h,rw,rh:integer;fullscreen:boolean);
+constructor TDmlGraphicsWindow.Create(title:AnsiString;w,h,rw,rh:integer;fullscreen:boolean);
 begin
     inherited Create(title,w,h,fullscreen);
     renderWidth:=rw;

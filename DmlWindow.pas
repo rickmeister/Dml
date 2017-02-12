@@ -31,29 +31,29 @@ type
         windowFullscreen : boolean;
         desktopDisplayMode : TSDL_DisplayMode;
     public
-        constructor Create(title:pchar;w,h:integer;fullscreen:boolean);
+        constructor Create(title:AnsiString;w,h:integer;fullscreen:boolean);
         destructor Free;
         function GetSDLWindow:PSDL_Window;
     end;
 
 implementation
 
-constructor TDmlWindow.Create(title:pchar;w,h:integer;fullscreen:boolean);
+constructor TDmlWindow.Create(title:AnsiString;w,h:integer;fullscreen:boolean);
 begin
     windowFullscreen:=fullscreen;
     if windowFullscreen then begin
         SDL_GetDesktopDisplayMode(0,@desktopDisplayMode);
         windowWidth:=desktopDisplayMode.w;
         windowHeight:=desktopDisplayMode.h;
-        sdlWindow:=SDL_CreateWindow(title,0,0,w,h,SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_INPUT_GRABBED);
+        sdlWindow:=SDL_CreateWindow(@title,0,0,w,h,SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_INPUT_GRABBED);
         end
     else begin
         windowWidth:=w;
         windowHeight:=h;
-        sdlWindow:=SDL_CreateWindow(title,SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,w,h,SDL_WINDOW_INPUT_GRABBED);
+        sdlWindow:=SDL_CreateWindow(@title,SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,w,h,SDL_WINDOW_INPUT_GRABBED);
     end;
 
-    if not assigned(sdlWindow) then raise Exception.Create(SDL_GetError);
+    if not assigned(sdlWindow) then raise Exception.Create(string(SDL_GetError));
     SDL_ShowWindow(sdlWindow);
 end;
 
